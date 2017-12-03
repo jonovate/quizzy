@@ -81,7 +81,7 @@ AWS, like any other cloud provider such as Azure or GCP, has a set of services f
 - **EMR** ElasticMapReduce Service - Managed HDFS/Hive / Spark type activity
   - ETL activity on data for analysis
 
-- **Redshift** Data Warehouse (based on postgres but columnar like Cassandra) Storing data in fixed format
+- **Redshift** Data Warehouse (based on postgres but columnar) Storing data in fixed format
   - Store processed lake data in fixed formats for analysts with SQL skills and other tools
 
 - **QuickSight** - Easy to use for building visualizations of data, ad-hoc analysis and insights
