@@ -25,7 +25,7 @@ Docker Inc. has competing product called Swarm.
 
 Kubernetes is concept of Master/Worker model. Master has a Controller, Scheduler, API Services, and etc for configuration across cluster.
 The workers are Nodes, where it contains a container runtime resources with groupings of Pods where the containers themselves actually run.
-Kubernetes also has concept of a Replica Set, which is a defined layout of pods/nodes.  This is similar to Docker Services.
+Kubernetes also has concept of a Replica Set, which is a defined layout of pods/nodes.  This seems to be similar to Docker Stacks.
 
 Most recent, recommended guide: <https://kubernetes.io/docs/getting-started-guides/minikube/>
 
