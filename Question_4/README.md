@@ -173,3 +173,14 @@ spark-shell --master spark://spark:7077
 
 #More examples here: https://spark.apache.org/examples.html
 ```
+
+With Hadoop/HDFS Built-in, but older Spark version:
+
+```
+docker pull sequenceiq/spark
+docker run -it -p 8088:8088 -p 8042:8042 -p 4440:4040 -h sandbox sequenceiq/spark:1.6.0 bash
+
+#Run as YARN Client
+spark-submit --class org.apache.spark.examples.SparkPi --master yarn-client --driver-memory 1g --executor-memory 1g --executor-cores 1 $SPARK_HOME/lib/spark-examples-1.6.0-hadoop2.6.0.jar
+    #> Pi is roughly 3.143478286956574
+```
