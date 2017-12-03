@@ -94,7 +94,7 @@ docker-compose exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zo
 
 docker-compose exec kafka sh   #Doesn't seem to work via exec
     cd /opt/kafka/ && ./bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
-docker cp google-1000-english.txt kafkadocker_kafka_1:\opt\kafka\test.txt
+docker cp google-1000-english.txt kafkadocker_kafka_1:/opt/kafka/test.txt
 docker-compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic connect-test --from-beginning
     ##Processed a total of 10000 messages
 docker-compose exec kafka cat /opt/kafa/test.sink.txt
@@ -120,3 +120,56 @@ Terminal 3 ->
         #Consumer day  2
 ```
 
+### Spark
+
+```
+docker pull p7hb/docker-spark:2.2.0
+
+#Jump right to spark shell
+docker run -it -p 4040:4040 -p 4080:8080 -p 4081:8081 -h spark --name=spark p7hb/docker-spark:2.2.0 spark-shell
+#Console on http://localhost:4040
+
+    spark version
+        #> String = 2.2.0
+
+    #Getting started with RDDs
+    val nums = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val numsData = sc.parallelize(no)
+    nums.count()
+        #> Long = 10
+    nums.take(3)
+        #> Array[int] = Array(1,2,3)
+
+    #In another terminal
+    docker cp google-1000-english.txt spark:/tmp/data.txt
+    #
+    val googleData = sc.textFile("/tmp/data.txt)
+    googleData.cache()
+    googleData.count()
+        #> Long = 10000
+        ## Now available on http://localhost:4000/storage
+    val thWords = googleData.filter(line => line.startsWith("th") & line.length() > 5)
+    thWords.count()
+        #> Long = 63   (63 words beginning with th which are at least 5 chars long)
+    thWords.sortBy({K => K}, false).take(5)
+        #> Array[String] = Array(thursday, thunder, thumbzilla, thumbs, thumbnails)
+
+    :quit    #Will close docker process
+
+docker rm spark         #It was started with spark-shell command
+
+#Re-Run with default shell
+docker run -it -p 4040:4040 -p 4080:8080 -p 4081:8081 -h spark --name=spark p7hb/docker-spark:2.2.0
+start-master.sh
+#Master Console on http://localhost:4080
+start-slave.sh spark://spark:7077
+#Worker Console on http://localhost:4081
+
+spark-submit --class org.apache.spark.examples.SparkPi --master spark://spark:7077 $SPARK_HOME/examples/jars/spark-examples*.jar 5
+    #> Pi is roughly 3.143478286956574
+
+#To start spark shell with master now
+spark-shell --master spark://spark:7077
+
+#More examples here: https://spark.apache.org/examples.html
+```
