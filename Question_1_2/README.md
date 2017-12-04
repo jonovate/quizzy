@@ -99,3 +99,7 @@ python postgres_q2.py
 ### Mongo
 
 Leveraged and refactored postgres .. ran out of time
+
+```
+python mongo_q2.py
+```
