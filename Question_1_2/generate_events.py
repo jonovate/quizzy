@@ -25,7 +25,7 @@ def gen_events():
                 'name': name,
                 'food': food,
                 'confirmed': random.choice([True, False]),
-                'signup_date': radar.random_datetime(start='2017-06-01', stop='2019-12-31').strftime('%Y-%m-%d')
+                'signup_date': radar.random_datetime(start='2017-06-01', stop='2017-12-31').strftime('%Y-%m-%d')
             }
             output[event_name].append(event)
 
