@@ -25,6 +25,38 @@
 
 ## Solution
 
+```pip install -r requirements.txt``` to ensure all libraries exist 
+
+```python generate_events.py > events.json``` to generate the event data
+
+### Postgres
+
+Created explicit columns for metadata.
+
+Considered keyword search as indexes.
+
+Two versions: Half normalized (only event types and colors, did not bother names, foods, etc. due to time .. realize in fully normalized world they would be) and anther using metadata and JSONB for the user data. See DDL sql.
+
+  - On the JSONB version, created one GIN index on event->name. Had trouble doing the same on last_name.
+    - ```SELECT event -> 'name' FROM public.events_json;```
+  - Also debated splitting name beforehand, but left it as 1 string as requirements seemed explicit.
+
+```
+docker run --name q1postgres -e POSTGRES_PASSWORD=myR00Tpw -d postgres
+docker cp events_ddl.sql q1postres:/tmp   #Copy our DDL script
+docker exec -it q1postgres bash
+    psql -U postgres -c "CREATE USER usr_question1 WITH PASSWORD 'goGO99';"
+    psql -U postgres -d postgres -c "CREATE DATABASE events";
+    psql -U postgres -d postgres -c "GRANT ALL ON DATABASE e2 to usr_question1";
+    psql -U postgres -d events < /tmp/events_ddl.sql
+python postgres_load.py
+```
+
+### Redis
+
+### Neo4J
+
+
 # Question 2
 
 > *Python:* testing Python 3, ORMs, code quality, etc: write ​[Python] ​code to connect to the above DBs and list its contents.
@@ -33,3 +65,13 @@
 > > In Python, write code to connect with the above DBs, and list its contents. Feel free to use ORMs, Pandas, etc.
 
 ## Solution
+
+### Postgres
+
+Only handled JSON version for time purposes.
+
+Half-normalized would need to *inner join* to their respective tables to get the value for display.
+
+```
+python postgres_q2.py
+```
