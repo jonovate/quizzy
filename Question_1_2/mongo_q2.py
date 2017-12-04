@@ -8,6 +8,7 @@ from formatting_q2 import print_formatting
 
 
 def present_events(events_collection):
+    
     mongo_events = events_collection.find({})
 
     formatted = map(lambda x: (

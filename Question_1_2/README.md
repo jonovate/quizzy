@@ -64,7 +64,8 @@ Choosing to store our events in a collection.
 - Adding non-unique indexes to our 3 keyword fields, which I used '__' as prefix for those keywords/metadata
 
 ```
-docker run --name q1mongo -p 27017:27017 -d mongo --auth
+docker run --name q1mongo -p 27017:27017 -d mongo
+#Struggled with auth (rootadmin couldn't create oter users), need to go deeper another day
 docker exec -it q1mongo mongo admin
     #db.createUser({ user: 'rootadmin', pwd: '!goGO99', roles: [ { role: "dbOwner", db: "admin" } ]})
     use events
@@ -75,6 +76,27 @@ python mongo_load.py
 
 ### Neo4J
 
+Ended up walking through Movies tutorial first.
+
+Planning:
+Name -->attends--> Event
+        [Confirmed, Brought]
+Name -->brings--> Food
+        [SignUp Date, Attended]
+
+Must be a better way without making a cycle.
+
+Couldn't figure out best way to create keywords/metadata so added as properties on appropriate label
+#<http://neo4j-rest-client.readthedocs.io/en/latest/indices.html> ???
+
+```
+docker run --name q1neo4j -p 7474:7474 -p 7687:7687 -d neo4j
+
+#Need to visit http://localhost:7474 and change password
+
+python neo4j_load.py
+# MATCH (n) RETURN n
+```
 
 # Question 2
 
@@ -84,6 +106,8 @@ python mongo_load.py
 > > In Python, write code to connect with the above DBs, and list its contents. Feel free to use ORMs, Pandas, etc.
 
 ## Solution
+
+**Pandas would not still from pip on Windows, need to go via Anaconda and ran out of time :(***
 
 ### Postgres
 
@@ -102,4 +126,15 @@ Leveraged and refactored postgres .. ran out of time
 
 ```
 python mongo_q2.py
+```
+
+
+### Neo4J
+
+*Default python neo4j-driver does not seem to work on Windows.  Switched to restclient library instead.*
+
+There is probably some better ways to traverse entire tree, oh well.
+
+```
+python neo4j_q2.py
 ```
