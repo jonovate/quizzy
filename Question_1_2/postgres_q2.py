@@ -1,23 +1,15 @@
-import json
-import random
 import traceback
-import nameparser
 
 import psycopg2
-import psycopg2.extras
+from formatting_q2 import print_formatting
 
 def present_events(curr):
     
     curr.execute('SELECT user_name, password, metadata_name as "keyword(name)", metadata_last_name as "keyword(lname)", metadata_color as "keyword(color)",  event_type as "event", event as "event data" FROM events_json')
     results = curr.fetchall()
     colnames = [desc[0] for desc in curr.description]
-   
-    format_str = '{:<15} {:<15} {:<15} {:<15} {:<25} {:<15} {}'
-    header = format_str.format(*colnames) 
-    print(header)
-    print("-" * len(header))
-    for row in results:
-        print(format_str.format(*row))
+  
+    print_formatting(results, colnames)
 
 if __name__ == '__main__':
 
