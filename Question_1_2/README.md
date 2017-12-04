@@ -50,7 +50,7 @@ docker cp events_ddl.sql q1postres:/tmp   #Copy our DDL script
 docker exec -it q1postgres bash
     psql -U postgres -c "CREATE USER usr_question1 WITH PASSWORD 'goGO99';"
     psql -U postgres -d postgres -c "CREATE DATABASE events";
-    psql -U postgres -d postgres -c "GRANT ALL ON DATABASE e2 to usr_question1";
+    psql -U postgres -d postgres -c "GRANT ALL ON DATABASE events to usr_question1";
     psql -U postgres -d events < /tmp/events_ddl.sql
 
 python postgres_load.py
@@ -78,16 +78,14 @@ python mongo_load.py
 
 Ended up walking through Movies tutorial first.
 
-Planning:
-Name -->attends--> Event
-        [Confirmed, Brought]
-Name -->brings--> Food
-        [SignUp Date, Attended]
+Planning (Must be a better way without making a cycle):
+  - Name -->attends--> Event
+        props: [Confirmed, Brought]
+  - Name -->brings--> Food
+        props: [SignUp Date, Attended]
 
-Must be a better way without making a cycle.
 
-Couldn't figure out best way to create keywords/metadata so added as properties on appropriate label
-#<http://neo4j-rest-client.readthedocs.io/en/latest/indices.html> ???
+Couldn't figure out best way to create keywords/metadata so added as properties on appropriate Node label
 
 ```
 docker run --name q1neo4j -p 7474:7474 -p 7687:7687 -d neo4j
@@ -95,7 +93,7 @@ docker run --name q1neo4j -p 7474:7474 -p 7687:7687 -d neo4j
 #Need to visit http://localhost:7474 and change password
 
 python neo4j_load.py
-# MATCH (n) RETURN n
+    # MATCH (n) RETURN n
 ```
 
 # Question 2
@@ -107,14 +105,14 @@ python neo4j_load.py
 
 ## Solution
 
-**Pandas would not still from pip on Windows, need to go via Anaconda and ran out of time :(***
+**Pandas would not install from pip on Windows, need to go via Anaconda and ran out of time :(***
 
 ### Postgres
 
 Only handled JSON version for time purposes (skipped normalized)
-    - Half-normalized would need to *inner join* to their respective tables to get the value for display.
+  - Half-normalized would need to *inner join* to their respective tables to get the value for display.
 
-Code isn't as good as I would have liked .. ran out of time
+Code isn't as ORM'y as I would have liked .. ran out of time
 
 ```
 python postgres_q2.py
@@ -122,7 +120,7 @@ python postgres_q2.py
 
 ### Mongo
 
-Leveraged and refactored postgres .. ran out of time
+Leveraged and refactored postgres Q2 solution.. ran out of time
 
 ```
 python mongo_q2.py
@@ -133,7 +131,7 @@ python mongo_q2.py
 
 *Default python neo4j-driver does not seem to work on Windows.  Switched to restclient library instead.*
 
-There is probably some better ways to traverse entire tree, oh well.
+There are probably some better ways to traverse entire tree
 
 ```
 python neo4j_q2.py

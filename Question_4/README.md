@@ -20,7 +20,7 @@
 ### Kafka
 
 Very fast (high throughput, low latency) distributed transaction log for realtime streams of data, akin to pub/sub due to use of Topics.
-Producers feed data into Topics which then hold the Records (key, value, timestamp), which for performance reasons are split across partitions; consumers then query the record data from the topic's partition.
+Producers feed data into Topics that hold the Records (key, value, timestamp), which for performance reasons can be split across partitions; consumers then query the record data from the topic's partition.
 Brokers are responsible for fault tolerance and ensuring Records are replicated appropriately.
 
 Topics are basically partitioned logs where Records are written in an append-only fashion, which helps with patterns such as Event Sourcing. A Record is assigned an offset, aka ID, which identifies itself in a certain partition of a topic. This means records within' a partition are ordered.
