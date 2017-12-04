@@ -25,15 +25,18 @@
 
 ## Solution
 
+*If I had a smidge more time, I would have had the python scripts running in their own containers, sharing same network as DB.*
+
+Commands for all DB's:
+
 ```pip install -r requirements.txt``` to ensure all libraries exist 
 
 ```python generate_events.py > events.json``` to generate the event data
 
 ### Postgres
 
-Created explicit columns for metadata.
-
-Considered keyword search as indexes.
+- Created explicit columns for metadata.
+- Considered keyword search as indexes.
 
 Two versions: Half normalized (only event types and colors, did not bother names, foods, etc. due to time .. realize in fully normalized world they would be) and anther using metadata and JSONB for the user data. See DDL sql.
 
@@ -42,17 +45,33 @@ Two versions: Half normalized (only event types and colors, did not bother names
   - Also debated splitting name beforehand, but left it as 1 string as requirements seemed explicit.
 
 ```
-docker run --name q1postgres -e POSTGRES_PASSWORD=myR00Tpw -d postgres
+docker run --name q1postgres -p 5432:5432 -e POSTGRES_PASSWORD=myR00Tpw -d postgres
 docker cp events_ddl.sql q1postres:/tmp   #Copy our DDL script
 docker exec -it q1postgres bash
     psql -U postgres -c "CREATE USER usr_question1 WITH PASSWORD 'goGO99';"
     psql -U postgres -d postgres -c "CREATE DATABASE events";
     psql -U postgres -d postgres -c "GRANT ALL ON DATABASE e2 to usr_question1";
     psql -U postgres -d events < /tmp/events_ddl.sql
+
 python postgres_load.py
 ```
 
-### Redis
+### Mongo
+
+Choosing to store our events in a collection.
+
+- Metadata keys will begin with at least one '_'
+- Adding non-unique indexes to our 3 keyword fields, which I used '__' as prefix for those keywords/metadata
+
+```
+docker run --name q1mongo -p 27017:27017 -d mongo --auth
+docker exec -it q1mongo mongo admin
+    #db.createUser({ user: 'rootadmin', pwd: '!goGO99', roles: [ { role: "dbOwner", db: "admin" } ]})
+    use events
+    #db.createUser({ user: 'usr_question1', pwd: 'goGO99', roles: [ { role: "readWrite", db: "events" } ] })
+
+python mongo_load.py
+```
 
 ### Neo4J
 
@@ -68,10 +87,15 @@ python postgres_load.py
 
 ### Postgres
 
-Only handled JSON version for time purposes.
+Only handled JSON version for time purposes (skipped normalized)
+    - Half-normalized would need to *inner join* to their respective tables to get the value for display.
 
-Half-normalized would need to *inner join* to their respective tables to get the value for display.
+Code isn't as good as I would have liked .. ran out of time
 
 ```
 python postgres_q2.py
 ```
+
+### Mongo
+
+Leveraged and refactored postgres .. ran out of time
