@@ -1,9 +1,10 @@
 import json
 import traceback
 
-from neo4jrestclient.client import GraphDatabase, Incoming, Outgoing, All
+from neo4jrestclient.client import All, GraphDatabase, Incoming, Outgoing
 
 from formatting_q2 import print_formatting
+
 
 def present_graph_data(gdb):
     lblevent = gdb.labels.get("Event")
@@ -57,4 +58,3 @@ if __name__ == '__main__':
         present_graph_data(gdb)
     except (Exception) as error:
         traceback.print_exc()
-
