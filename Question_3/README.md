@@ -10,7 +10,7 @@
 ## Solution
 
 ### Background
-Data Lakes are a more recent, modern architectural pattern for the purposes of storing vasts amounts of data for later processing, analysis, and analytics, where the results of any transformations are also preserved.  A key characteristic of the Lake, as compared to Data Warehouses and Data Marts of the past, is the data is stored in its original, raw format: it doesn't matter if its structured, semi-structured, unstructured or binary - the lake will take it. This is a big difference to the former design, which required skilled resources to actually translate/transform the data into a fixed schema before being ingested into the Warehouse; consequently fields that were not needed were dropped and possibly lost forever. Now with a Lake, the original data is retained so that if an analysis query later needs another field, it would be available immediately instead of needing to go back to source and hoping it was preserved upstream.
+Data Lakes are a more recent, modern architectural pattern for the purposes of storing vast amounts of data for later processing, analysis, and analytics, where the results of any transformations are also preserved.  A key characteristic of the Lake, as compared to Data Warehouses and Data Marts of the past, is the data is stored in its original, raw format: it doesn't matter if its structured, semi-structured, unstructured or binary - the lake will take it. This is a big difference to the former design, which required skilled resources to actually translate/transform the data into a fixed schema before being ingested into the Warehouse; consequently, fields that were not needed were dropped and possibly lost forever. Now with a Lake, the original data is retained so that if an analysis query later needs another field, it would be available immediately instead of needing to go back to source and hoping it was preserved upstream.
 
 Another analogy to visualize a Lake is: streams & rivers (different ingress points) feeding water (data) into the body of the lake (centralized data store), with potentially streams flowing out (analytics, visualizations, etc.)
 
@@ -20,7 +20,7 @@ Finally, to layout the different components of a Data Lake:
   - **Data Submission Endpoints** - How the data gets in:  batch file copy, data streams, event queues/topics, web services, etc.
   - **Ingestion Processing** - Initial validation, indexing, extraction of metadata, etc.
 - **Management**
-  - **Dataset Management** - Storage and managemet of the big data itself
+  - **Dataset Management** - Storage and management of the big data itself
   - **Search** - Keeping any indexes any metadata up-to-date
   - **Dataset Analysis** - Sorts, Joins, Transformations, Aggregations, Analysis of data
 - **Access**
@@ -31,12 +31,12 @@ Finally, to layout the different components of a Data Lake:
 AWS, like any other cloud provider such as Azure or GCP, has a set of services for building and managing a company's data lake. Some of the reasons one would choose to go the cloud route for hosting it include:
 
 - Multiple tools available in the cloud suite for compute & processing, storage, ad-hoc & predictive analysis/analytics, real-time streaming, MI and AI.
-  - Services also availalable immediately as opposed to waiting for traditional on-prem
+  - Services provisioned immediately as opposed to waiting for traditional on-prem
   - Can use right tool for the job instead of what company may have licensed
 - Savings for the vast amount of compute & storage needed
 - Security out of the box (roles, subnets, etc.)
 - Choose locations/regions where the business is actually located (*ie: IoT use case - ability to place services where customers actually are*)
-- Disaster Recovery more inherintly built-in
+- Disaster Recovery inherently built-in
 
 #### AWS Services
 
@@ -44,13 +44,13 @@ AWS, like any other cloud provider such as Azure or GCP, has a set of services f
   - Storing extracts/batch files/snapshots in buckets for ingestion into lake
   - Storage of actual lake data which is indexed/inventoried across ES
   - Saving data (*ie: after ingestion processing*) before being loaded elsewhere
-  - Saving analyzed extracts of data from the lake for later analtyics/visualization
+  - Saving analyzed extracts of data from the lake for later analytics/visualizations
   - **S3 Events** trigger alerts that new/processed data is available
   - **Athena** Analyze data in S3 with query-like syntax, very fast
 
 - **EC2** Elastic Compute Service: Scalable and resizable servers for computing type function.. basically a virtual server with limitations.
   - Hosting any web services / microservices (could be exposed in API Gateway)
-  - Compute container for hosting auxillary tools in lake management and processing (ie: Spark)
+  - Compute container for hosting auxiliary tools in lake management and processing (ie: Spark)
 
 - **API Gateway** Front door to APIs - functions to create, publish, maintain & monitor & secure
   - Expose EC2 services for ingress of data into lake
@@ -61,7 +61,7 @@ AWS, like any other cloud provider such as Azure or GCP, has a set of services f
   - Accept event notifications from S3 buckets
   - Hosting functions in a pipeline during later analysis of data in lake (ie: parse metadata or indexes)
 
-- **Kinesis** Ingest and buffering of real-time stream data and events. A managed Kafka service.  **Firehose** then lets you direct data into other AWS Services.
+- **Kinesis** Ingest and buffering of real-time stream data and events. A managed Kafka offering.  **Firehose** then lets you direct data into other AWS Services.
   - Handling stream of data as ingress, store data in S3 for example.
   - **Kinesis Data Analytics** - Run SQL-like querying against Kinesis stream for selective analytics
 
@@ -88,14 +88,14 @@ AWS, like any other cloud provider such as Azure or GCP, has a set of services f
   - Hook into data in lake (ie: Redshift) to produce visualizations, etc.
   - Could alternatively use *Kibana* to hook into for visualizations
 
-- **Cognito** Security/Managemnt for Authentication of Solutions and Apps
+- **Cognito** Security/Management for Authentication of Solutions and Apps
   - Authentication for services allowing ingestion into lake
   - Managing who can see data in the lake
 - **IAM** Identity and Access Management: Control and manage access to resources in AWS
   - Managing users and roles for adding/changing data in lake
   - Managing who can operate AWS Services, change infrastructure components, etc.
 - **VPC** Virtual Private Cloud: Isolate and protect services in compartments, VPN, etc.
-  - Protect and isolate data for security, seperate ingestion from storage
+  - Protect and isolate data for security, separate ingestion from storage
 
 
 #### Templates & Solution

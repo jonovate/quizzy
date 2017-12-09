@@ -15,7 +15,7 @@
 >        - Create a DB to accumulate different family events: DB name == 'events'
 >        - Using the 'events' DB, create a field to accumulate different types
 >            of events: Thanksgiving , Potluck , Birthday .
->        - Each event should should contain the following relevant fields:
+>        - Each event should contain the following relevant fields:
 >            Name , Food , Confirmed , Sign Up Date .
 >        - Data to be added to each field:
 >            Names: John Jay; Sandy Ess; Tom Tee; Tina Tee.
@@ -38,7 +38,7 @@ Commands for all DB's:
 - Created explicit columns for metadata.
 - Considered keyword search as indexes.
 
-Two versions: Half normalized (only event types and colors, did not bother names, foods, etc. due to time .. realize in fully normalized world they would be) and anther using metadata and JSONB for the user data. See DDL sql.
+Two versions: Half normalized (only event types and colors, did not bother names, foods, etc. due to time.. I recognize in fully normalized world they be candidates as well) and anther using metadata and JSONB for the user data. See DDL sql.
 
   - On the JSONB version, created one GIN index on event->name. Had trouble doing the same on last_name.
     - ```SELECT event -> 'name' FROM public.events_json;```

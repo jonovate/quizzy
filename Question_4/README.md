@@ -19,13 +19,13 @@
 
 ### Kafka
 
-Very fast (high throughput, low latency) distributed transaction log for realtime streams of data, akin to pub/sub due to use of Topics.
+Very fast (high throughput, low latency) distributed transaction log for real-time streams of data, akin to pub/sub due to use of Topics.
 Producers feed data into Topics that hold the Records (key, value, timestamp), which for performance reasons can be split across partitions; consumers then query the record data from the topic's partition.
 Brokers are responsible for fault tolerance and ensuring Records are replicated appropriately.
 
 Topics are basically partitioned logs where Records are written in an append-only fashion, which helps with patterns such as Event Sourcing. A Record is assigned an offset, aka ID, which identifies itself in a certain partition of a topic. This means records within' a partition are ordered.
 
-In addition to choosing which Topic, Producers can either choose to allow data to be written in a Round Robin or define a partition key function to decide where data goes, similar to idea of Sharding DB.  This allows similar groups of data to end up on same partition which also helps when order matters.
+In addition to choosing which Topic, Producers can either choose to allow data to be written in a Round Robin or define a partition key function to decide where data goes, similar to the idea of sharding a DB.  This allows similar groups of data to end up on same partition which also helps when order matters.
 
 Other facts:
 
@@ -48,13 +48,13 @@ Brokers are then responsible for replicating Partitions across the other servers
 
 > *"The Kafka cluster stores streams of records in categories called topics"*
 
-Topics are channels/feeds which contain a logical group of Records, which Producers write to and Consumers read from. Like in Pub/Sub, any amount of consumers can read from them ("Consumer Groups"). 
+Topics are channels/feeds which contain a logical group of Records, which Producers write to and Consumers read from. Like in Pub/Sub, any number of consumers can read from them ("Consumer Groups").
 Topics are then split up across 1 or more Partitions which guarantee ordering of Records within that partition, but not across Topic.  Once a record is written to a Topic's partition, it cannot be changed (immutable). Zookeeper keeps track of the last offset that was read by consumer to ensure it is not read again; Kafka can also be configured to purge records after a certain amount of time or size.
 
 
 > *"Each record consists of a key, a value, and a timestamp"*
 
-This makes reference to the underlying protocol for Records. The value is the payload, the key can optionally be assigned by the Producer to help decide which partition the record should end up on, and the timestamp can be assigned by the client to state the time the record was created, else will be assigned by Producer API depending on system settings (Producer Times versus AppendTime, etc.)
+This definition makes reference to the underlying protocol for Records. The value is the payload, the key can optionally be assigned by the Producer to help decide which partition the record should end up on, and the timestamp can be assigned by the client to state the time the record was created, else will be assigned by Producer API depending on system settings (Producer Times versus AppendTime, etc.)
 
 > *"Explain 4 Core APIs"*
 
@@ -88,21 +88,6 @@ Terminal 2 ->
 #etc
 #^C
 
-
-#Connect: Setup File In, File Out Connector - uses default topic of connect-test
-docker-compose exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic connect-test
-
-docker-compose exec kafka sh   #Doesn't seem to work via exec
-    cd /opt/kafka/ && ./bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
-docker cp google-1000-english.txt kafkadocker_kafka_1:/opt/kafka/test.txt
-docker-compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic connect-test --from-beginning
-    ##Processed a total of 10000 messages
-docker-compose exec kafka cat /opt/kafa/test.sink.txt
-    ##wc test.sink.txt == 10000
-#(Would then use API on 8083 to keep Connect running long term)
-#I also built the Kafka-Connect-Gitub-Source project to feed data into Kafka, but ran out of time to fully set it up
-
-
 #Streams Quickstart
 docker-compose exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic streams-plaintext-input
 docker-compose exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic streams-wordcount-output
@@ -118,6 +103,20 @@ Terminal 3 ->
         #          day  1
         #day
         #Consumer day  2
+
+
+#Connect: Setup File In, File Out Connector - uses default topic of connect-test
+docker-compose exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic connect-test
+
+docker-compose exec kafka sh   #Doesn't seem to work via exec
+    cd /opt/kafka/ && ./bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
+docker cp google-10000-english.txt kafkadocker_kafka_1:/opt/kafka/test.txt
+docker-compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic connect-test --from-beginning
+    ##Processed a total of 10000 messages
+docker-compose exec kafka cat /opt/kafa/test.sink.txt
+    ##wc test.sink.txt == 10000
+#(Would then use API on 8083 to keep Connect running long term)
+#I also built the Kafka-Connect-Gitub-Source project to feed data into Kafka, but ran out of time to fully set it up
 ```
 
 ### Spark
@@ -141,7 +140,7 @@ docker run -it -p 4040:4040 -p 4080:8080 -p 4081:8081 -h spark --name=spark p7hb
         #> Array[int] = Array(1,2,3)
 
     #In another terminal
-    docker cp google-1000-english.txt spark:/tmp/data.txt
+    docker cp google-10000-english.txt spark:/tmp/data.txt
     #
     val googleData = sc.textFile("/tmp/data.txt)
     googleData.cache()
